@@ -42,6 +42,8 @@ _, TX_SCHEMA_CHAIN_MIGRATION_ELECTION = _load_schema('transaction_chain_migratio
 
 _, TX_SCHEMA_VOTE = _load_schema('transaction_vote_' + TX_SCHEMA_VERSION)
 
+_, TX_SCHEMA_REQUEST_FOR_QUOTE = _load_schema('transaction_request_for_quote_' + TX_SCHEMA_VERSION)
+
 
 def _validate_schema(schema, body):
     """Validate data against a schema"""
@@ -72,10 +74,12 @@ def validate_transaction_schema(tx):
     """Validate a transaction dict.
 
     TX_SCHEMA_COMMON contains properties that are common to all types of
-    transaction. TX_SCHEMA_[TRANSFER|CREATE] add additional constraints on top.
+    transaction. TX_SCHEMA_[TRANSFER|CREATE|REQUEST_FOR_QUOTE] add additional constraints on top.
     """
     _validate_schema(TX_SCHEMA_COMMON, tx)
     if tx['operation'] == 'TRANSFER':
         _validate_schema(TX_SCHEMA_TRANSFER, tx)
+    elif tx['operation'] == 'REQUEST_FOR_QUOTE':
+        _validate_schema(TX_SCHEMA_REQUEST_FOR_QUOTE, tx)
     else:
         _validate_schema(TX_SCHEMA_CREATE, tx)
