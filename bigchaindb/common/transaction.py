@@ -503,7 +503,8 @@ class Transaction(object):
 
     CREATE = 'CREATE'
     TRANSFER = 'TRANSFER'
-    ALLOWED_OPERATIONS = (CREATE, TRANSFER)
+    REQUEST_FOR_QUOTE = 'REQUEST_FOR_QUOTE'
+    ALLOWED_OPERATIONS = (CREATE, TRANSFER, REQUEST_FOR_QUOTE)
     VERSION = '2.0'
 
     def __init__(self, operation, asset, inputs=None, outputs=None,
@@ -542,6 +543,10 @@ class Transaction(object):
         elif (operation == self.TRANSFER and
                 not (isinstance(asset, dict) and 'id' in asset)):
             raise TypeError(('`asset` must be a dict holding an `id` property '
+                             "for 'TRANSFER' Transactions".format(operation)))
+        elif (operation == self.REQUEST_FOR_QUOTE and
+                not (isinstance(asset, dict))):
+            raise TypeError(('`asset` must be a dict'
                              "for 'TRANSFER' Transactions".format(operation)))
 
         if outputs and not isinstance(outputs, list):
