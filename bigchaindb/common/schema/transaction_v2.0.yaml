@@ -66,6 +66,7 @@ definitions:
     - CHAIN_MIGRATION_ELECTION
     - VOTE
     - REQUEST_FOR_QUOTE
+    - INTEREST
   asset:
     type: object
     additionalProperties: false
