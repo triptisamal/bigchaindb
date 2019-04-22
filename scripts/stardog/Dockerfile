@@ -8,7 +8,8 @@ RUN install_packages curl openjdk-8-jre-headless unzip
 RUN cd /opt && \
     curl -O 'http://stardog.download.s3-website-us-east-1.amazonaws.com/downloads/af8c58b9-9ab2-49aa-b133-55e11f666109/stardog-6.1.2.zip' && \
     unzip 'stardog-6.1.2.zip' && \
-    mv stardog-6.1.2 stardog
+    mv 'stardog-6.1.2' 'stardog' && \
+    rm 'stardog-6.1.2.zip'
 
 RUN chmod +x /opt/stardog/bin/stardog-admin
 
