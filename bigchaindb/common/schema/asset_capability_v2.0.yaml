@@ -1,0 +1,8 @@
+---
+data:
+  capability: drilling
+  capability_parameters:
+    speed: object
+    machine_identifier: string
+    simple_capability: none
+
