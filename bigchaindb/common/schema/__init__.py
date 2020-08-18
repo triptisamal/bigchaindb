@@ -29,8 +29,12 @@ TX_SCHEMA_VERSION = 'v2.0'
 
 TX_SCHEMA_PATH, TX_SCHEMA_COMMON = _load_schema('transaction_' +
                                                 TX_SCHEMA_VERSION)
-_, TX_SCHEMA_CREATE = _load_schema('transaction_create_' +
+#NOTE: The commented code below serves for original types of transaction CREATE,asset_capability only is for asset changes
+#_, TX_SCHEMA_CREATE = _load_schema('transaction_create_' +
+#                                   TX_SCHEMA_VERSION)
+_, TX_SCHEMA_CREATE = _load_schema('asset_capability_' +
                                    TX_SCHEMA_VERSION)
+
 _, TX_SCHEMA_TRANSFER = _load_schema('transaction_transfer_' +
                                      TX_SCHEMA_VERSION)
 

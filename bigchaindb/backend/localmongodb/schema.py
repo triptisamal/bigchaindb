@@ -30,6 +30,15 @@ INDEXES = {
         ('id', dict(name='asset_id', unique=True)),
         ([('$**', TEXT)], dict(name='text')),
     ],
+##Changes START : Tripti
+##id = transaction id that created the asset
+##capacity of shares
+    'bid_assets': [
+        ('id', dict(name='asset_id', unique=True)),
+        ([('$**', TEXT)], dict(name='text')),
+    ],
+##Changes END : Tripti
+
     'blocks': [
         ([('height', DESCENDING)], dict(name='height', unique=True)),
     ],

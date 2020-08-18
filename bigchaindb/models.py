@@ -36,6 +36,10 @@ class Transaction(Transaction):
 
         elif self.operation == Transaction.TRANSFER:
             self.validate_transfer_inputs(bigchain, current_transactions)
+##Tripti START for bid transaction
+        elif self.operation == Transaction.BID:
+            self.validate_bid_inputs(bigchain, current_transactions)
+##Tripti END for bid transaction
 
         return self
 

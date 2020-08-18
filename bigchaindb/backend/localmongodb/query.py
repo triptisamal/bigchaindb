@@ -52,6 +52,14 @@ def get_metadata(conn, transaction_ids):
         conn.collection('metadata')
         .find({'id': {'$in': transaction_ids}},
               projection={'_id': False}))
+##Changes START: Tripti
+
+@register_query(LocalMongoDBConnection)
+def store_bid_assets(conn, assets):
+    return conn.run(
+        conn.collection('bid_assets')
+        .insert_many(assets, ordered=False))
+##Changes END : Tripti
 
 
 @register_query(LocalMongoDBConnection)

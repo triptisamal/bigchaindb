@@ -125,6 +125,11 @@ class BigchainDB(object):
     def store_bulk_transactions(self, transactions):
         txns = []
         assets = []
+##Changes START: Tripti BID
+#The table for keeping assets, that are bid should be defined, something like bid_assets
+        bid_assets = []
+##Changes END: Tripti
+
         txn_metadatas = []
         for t in transactions:
             transaction = t.tx_dict if t.tx_dict else rapidjson.loads(rapidjson.dumps(t.to_dict()))
@@ -132,7 +137,15 @@ class BigchainDB(object):
                 asset = transaction.pop('asset')
                 asset['id'] = transaction['id']
                 assets.append(asset)
-
+##Changes START: Tripti
+#End of BID transaction
+        #    if transaction['operation'] == t.BID:
+        #        asset = transaction.pop('asset')
+        #        asset['id'] = transaction['id']
+        #        bid_assets.append(asset)
+        #        backend.query.store_bid_assets(self.connection, bid_assets)
+        #changes for ACCCPET BID should have a release bid function
+##Changes END: Tripti
             metadata = transaction.pop('metadata')
             txn_metadatas.append({'id': transaction['id'],
                                   'metadata': metadata})

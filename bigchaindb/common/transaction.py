@@ -505,7 +505,11 @@ class Transaction(object):
     TRANSFER = 'TRANSFER'
     REQUEST_FOR_QUOTE = 'REQUEST_FOR_QUOTE'
     INTEREST = 'INTEREST'
-    ALLOWED_OPERATIONS = (CREATE, TRANSFER, REQUEST_FOR_QUOTE,INTEREST)
+     ##Changes START: Tripti
+    BID = 'BID'
+    ALLOWED_OPERATIONS = (CREATE, TRANSFER, REQUEST_FOR_QUOTE,INTEREST,BID)
+     ##Changes END: Tripti
+
     VERSION = '2.0'
 
     def __init__(self, operation, asset, inputs=None, outputs=None,
@@ -544,6 +548,19 @@ class Transaction(object):
                 asset is not None and not (isinstance(asset, dict) and 'data' in asset)):
             raise TypeError(('`asset` must be None or a dict holding a `data` '
                              " property instance for '{}' Transactions".format(operation)))
+
+
+            ##Changes START: Tripti
+    ##This code does the intial schema validation -- checking whether the parameters of an asset are of correct type or not; also whether all parameters are present or for for CREATE 
+
+            if ('data' in asset):
+                if 'capability' in asset['data'] and 'capability_parameters' in asset['data']:
+                    if (not('speed' in asset['data']['capability_parameters'] and 'machine_identifier' in asset['data']['capability_parameters'] and 'simple_capability' in asset['data']['capability_parameters'])):
+                            raise TypeError(('`asset` must have speed, machine_identifier, simple_capability as values for  capability_parameters  ' " property instance for '{}' Transactions".format(operation)))
+                    else:
+                        raise TypeError(('`asset` must have capability and capability_parameters as values for ‘data’ ' " property instance for '{}' Transactions".format(operation)))
+ ##Changes END: Tripti
+
         elif (operation == self.TRANSFER and
                 not (isinstance(asset, dict) and 'id' in asset)):
             raise TypeError(('`asset` must be a dict holding an `id` property '
@@ -644,6 +661,40 @@ class Transaction(object):
         inputs.append(Input.generate(tx_signers))
 
         return (inputs, outputs)
+##Changes START: Tripti
+    @classmethod
+    def validate_bid(cls, inputs, tx_signers, asset, metadata):
+        if not isinstance(tx_signers, list):
+            raise TypeError('`tx_signers` must be a list instance')
+        if len(tx_signers) == 0:
+            raise ValueError('`tx_signers` list cannot be empty')
+        if not (asset is None or isinstance(asset, dict)):
+            raise TypeError('`asset` must be a dict or None')
+        if not (metadata is None or isinstance(metadata, dict)):
+            raise TypeError('`metadata` must be a dict or None')
+
+        outputs = []
+            #pub_keys, amount = recipient
+            #outputs.append(Output.generate(pub_keys, amount))
+            #public key should be its own as the assets are 'transferred' to itself
+            #define threshold for how much can be trsnaferred
+
+        if not isinstance(asset_id, str):
+            raise TypeError('`asset_id` must be a string')
+
+        return (deepcopy(inputs), outputs)
+    
+    
+    @classmethod
+    def bid(cls, inputs, tx_signers, metadata=None, asset=None):
+        """A simple way to generate a `BID` transaction.
+        """
+        (inputs, outputs) = cls.validate_bid(inputs, tx_signers, asset, metadata)
+        return cls(cls.BID, {'data': asset}, inputs, outputs, metadata)
+
+    
+     ##Changes END: Tripti
+
 
     @classmethod
     def create(cls, tx_signers, recipients, metadata=None, asset=None):
@@ -1285,6 +1336,14 @@ class Transaction(object):
     @classmethod
     def validate_schema(cls, tx):
         pass
+##Tripti TODO START for bid transaction
+#Threshold, also define the recipients of the outputs, inputs need to be validated against RFQ and CREATE transaction
+#Reading BID table from Mongodb
+    def validate_bid_inputs(self, bigchain, current_transactions=[]):
+        input_txs = []
+        input_conditions = []
+
+##Tripti END for bid transaction
 
     def validate_transfer_inputs(self, bigchain, current_transactions=[]):
         # store the inputs so that we can check if the asset ids match
